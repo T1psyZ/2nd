@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Check</title>
+  <link rel="stylesheet" href="Times.css">
+  <script>
+    // Update the time since March 26, 2023
+    function updateTime() {
+      const firstValentines = new Date("March 26, 2023 00:00:00");
+      const now = new Date();
+      const diff = now - firstValentines;
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("time").innerHTML =
+        `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds <br> with you <3`;
+    }
+    setInterval(updateTime, 1000);
+
+    // List of images to show (initial order)
+    let images = [
+      "us7.png", "us1.png", "love1.png",  "us4.png",
+      "ft1.png", "ft2.png", 
+      "ft4.png", "mc.png", "mc2.png"
+    ];
+
+    let currentIndex = 0;
+    let cycleInterval;
+
+    // Fisher-Yates shuffle algorithm
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    // Shuffle images initially
+    shuffleArray(images);
+
+    // Function to cycle photos with a smooth white fade effect
+    function cyclePhotos() {
+      const photo = document.getElementById("memoryImage");
+      const fadeOverlay = document.getElementById("fadeOverlay");
+
+      // Fade out (show white overlay)
+      fadeOverlay.style.opacity = "1";
+
+      setTimeout(() => {
+        currentIndex++;
+        // If we've reached the end, reshuffle and reset index
+        if (currentIndex >= images.length) {
+          shuffleArray(images);
+          currentIndex = 0;
+        }
+        // Change the image
+        photo.src = images[currentIndex];
+
+        // Fade in (hide overlay)
+        setTimeout(() => {
+          fadeOverlay.style.opacity = "0";
+        }, 500);
+      }, 500);
+    }
+
+    // Start cycling images every 3 seconds and update time on page load
+    window.onload = () => {
+      updateTime();
+      cycleInterval = setInterval(cyclePhotos, 3000);
+    };
+  </script>
+</head>
+<body>
+  <h1>Time Check</h1>
+
+  <!-- Container for the rotating image + fade overlay -->
+  <div class="image-container">
+    <img id="memoryImage" src="love.png" alt="Memories">
+    <div id="fadeOverlay"></div>
+  </div>
+
+  <!-- Time Display -->
+  <p id="time">Loading...</p>
+
+  <!-- Navigation Buttons -->
+  <div class="buttons">
+    <button onclick="window.location.href='index.html'">Home</button>
+    <button onclick="window.location.href='AppreciationCard.html'">Appreciation</button>
+  </div>
+</body>
+</html>
